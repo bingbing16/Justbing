@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/krizza",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Krizza\\": "app/",
+            "Modules\\Krizza\\Database\\Factories\\": "database/factories/",
+            "Modules\\Krizza\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Krizza\\Tests\\": "tests/"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "name": "nwidart/justine",
+    "description": "",
+    "authors": [
+        {
+            "name": "Nicolas Widart",
+            "email": "n.widart@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Justine\\": "app/",
+            "Modules\\Justine\\Database\\Factories\\": "database/factories/",
+            "Modules\\Justine\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Justine\\Tests\\": "tests/"
+        }
+    }
+}

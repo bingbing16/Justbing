@@ -1,0 +1,11 @@
+{
+    "name": "Justine",
+    "alias": "justine",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Justine\\Providers\\JustineServiceProvider"
+    ],
+    "files": []
+}

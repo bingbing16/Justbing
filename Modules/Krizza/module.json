@@ -1,0 +1,11 @@
+{
+    "name": "Krizza",
+    "alias": "krizza",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Krizza\\Providers\\KrizzaServiceProvider"
+    ],
+    "files": []
+}
