@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             SubmissionStatusSeeder::class,
             ReportingPeriodSeeder::class,
             LguSeeder::class,
+            \Modules\Justine\Database\Seeders\JustineDatabaseSeeder::class,
         ]);
     }
 }

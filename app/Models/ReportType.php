@@ -23,4 +23,8 @@ class ReportType extends Model
     {
         return $this->hasMany(ReportSubmission::class);
     }
+    public function sections(): HasMany
+    {
+        return $this->hasMany(ReportSection::class,'report_type_id')->orderBy('display_order');
+    }
 }

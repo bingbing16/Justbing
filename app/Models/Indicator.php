@@ -9,20 +9,31 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Indicator extends Model
 {
     protected $fillable = [
-        'report_type_id',
+        'report_section_id',
         'code',
         'name',
         'display_order',
-        'active',
+        'is_active',
     ];
 
-    public function reportType(): BelongsTo
+    protected $casts = [
+        'display_order' => 'integer',
+        'is_active' => 'boolean',
+    ];
+
+    public function section(): BelongsTo
     {
-        return $this->belongsTo(ReportType::class);
+        return $this->belongsTo(
+            ReportSection::class,
+            'report_section_id'
+        );
     }
 
     public function reportValues(): HasMany
     {
-        return $this->hasMany(ReportValue::class);
+        return $this->hasMany(
+            ReportValue::class,
+            'indicator_id'
+        );
     }
 }
