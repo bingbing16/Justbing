@@ -14,22 +14,37 @@ return new class extends Migration
         Schema::create('report_submissions', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('lgu_id')->constrained('lgus')->cascadeOnDelete();
+            $table->foreignId('lgu_id')
+                ->constrained('lgus')
+                ->cascadeOnDelete();
 
-            $table->foreignId('report_type_id')->constrained('report_types')->restrictOnDelete();
+            $table->foreignId('report_type_id')
+                ->constrained('report_types')
+                ->restrictOnDelete();
 
-            $table->foreignId('reporting_period_id')->constrained('reporting_periods')->restrictOnDelete();
+            $table->foreignId('reporting_period_id')
+                ->constrained('reporting_periods')
+                ->restrictOnDelete();
 
-            $table->foreignId('status_id')->constrained('submission_statuses')->restrictOnDelete();
+            $table->foreignId('status_id')
+                ->constrained('submission_statuses')
+                ->restrictOnDelete();
 
-            $table->foreignId('submitted_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('submitted_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete();
 
             $table->timestamp('submitted_at')->nullable();
+
             $table->text('remarks')->nullable();
 
             $table->timestamps();
 
-            $table->unique( ['lgu_id', 'report_type_id', 'reporting_period_id'],'submission_unique');
+            $table->unique(
+                ['lgu_id', 'report_type_id', 'reporting_period_id'],
+                'rs_lgu_type_period_unique'
+            );
         });
     }
 

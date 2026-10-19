@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('reporting_periods', function (Blueprint $table) {
@@ -16,20 +13,22 @@ return new class extends Migration
 
             $table->unsignedSmallInteger('year');
 
-            $table->foreignId('quarter_id')->constrained('quarters')->restrictOnDelete();
+            $table->foreignId('quarter_id')
+                ->constrained('quarters')
+                ->restrictOnDelete();
 
-            $table->date('start_date');
-            $table->date('end_date');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
 
             $table->timestamps();
 
-            $table->unique(['year', 'quarter_id']);
+            $table->unique(
+                ['year', 'quarter_id'],
+                'reporting_period_year_quarter_unique'
+            );
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('reporting_periods');

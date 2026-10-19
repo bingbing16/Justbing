@@ -10,6 +10,7 @@ class JustineDatabaseSeeder extends Seeder
     {
         $this->call([
             HWPSCSeeder::class,
+            FhsisImportMappingSeeder::class,
         ]);
     }
 }

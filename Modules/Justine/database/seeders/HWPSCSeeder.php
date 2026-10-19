@@ -13,26 +13,26 @@ class HWPSCSeeder extends Seeder
     {
         /*
         |--------------------------------------------------------------------------
-        | HWPSC Report Type
+        | Report Type
         |--------------------------------------------------------------------------
         */
 
-        $reportType = ReportType::firstOrCreate(
+        $reportType = ReportType::updateOrCreate(
             ['code' => 'HWPSC'],
             [
                 'name' => 'HWPSC',
-                'description' => 'HWPSC LGU Quarterly Report',
+                'description' => 'Health and Wellness Program for Senior Citizens',
                 'is_active' => true,
             ]
         );
 
         /*
         |--------------------------------------------------------------------------
-        | GERIATRIC SCREENING
+        | Sections
         |--------------------------------------------------------------------------
         */
 
-        $geriatric = ReportSection::updateOrCreate(
+        $geriatricScreening = ReportSection::updateOrCreate(
             [
                 'report_type_id' => $reportType->id,
                 'code' => 'GERIATRIC_SCREENING',
@@ -46,175 +46,47 @@ class HWPSCSeeder extends Seeder
             ]
         );
 
-        /*
-        |--------------------------------------------------------------------------
-        | Target for Geriatric Screening
-        |--------------------------------------------------------------------------
-        */
-
-        Indicator::updateOrCreate(
-            [
-                'report_section_id' => $geriatric->id,
-                'code' => 'GERIATRIC_SCREENING_TARGET',
-            ],
-            [
-                'name' => 'Target for Geriatric Screening (based on the Total Eligible Population)',
-                'display_order' => 1,
-                'is_active' => true,
-            ]
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | Screened using the Geriatric Screening Tool
-        |--------------------------------------------------------------------------
-        */
-
         $screened = ReportSection::updateOrCreate(
             [
                 'report_type_id' => $reportType->id,
-                'code' => 'GERIATRIC_SCREENED',
+                'code' => 'SCREENED',
             ],
             [
-                'parent_id' => $geriatric->id,
+                'parent_id' => $geriatricScreening->id,
                 'name' => 'Screened using the Geriatric Screening Tool',
-                'display_order' => 2,
-                'is_active' => true,
-            ]
-        );
-
-        Indicator::updateOrCreate(
-            [
-                'report_section_id' => $screened->id,
-                'code' => 'SENIOR_CITIZENS_SCREENED',
-            ],
-            [
-                'name' => 'Total No. of Senior Citizens Screened',
+                'description' => null,
                 'display_order' => 1,
                 'is_active' => true,
             ]
         );
 
-        /*
-        |--------------------------------------------------------------------------
-        | With at least one Positive (+) Screening
-        |--------------------------------------------------------------------------
-        */
-
-        $positive = ReportSection::updateOrCreate(
+        $positiveScreening = ReportSection::updateOrCreate(
             [
                 'report_type_id' => $reportType->id,
                 'code' => 'POSITIVE_SCREENING',
             ],
             [
-                'parent_id' => $geriatric->id,
-                'name' => 'With at least one Positive (+) Screening',
-                'display_order' => 3,
+                'parent_id' => $geriatricScreening->id,
+                'name' => 'With atleast one Positive (+) Screening',
+                'description' => null,
+                'display_order' => 2,
                 'is_active' => true,
             ]
         );
 
-        Indicator::updateOrCreate(
-            [
-                'report_section_id' => $positive->id,
-                'code' => 'SENIOR_CITIZENS_POSITIVE_SCREENING',
-            ],
-            [
-                'name' => 'Total No. of Senior Citizens with at least one Positive (+) Screening',
-                'display_order' => 1,
-                'is_active' => true,
-            ]
-        );
-
-        $positiveIndicators = [
-            [
-                'code' => 'MEMORY',
-                'name' => 'A. Memory',
-            ],
-            [
-                'code' => 'DEPRESSION',
-                'name' => 'B. Depression',
-            ],
-            [
-                'code' => 'POLYPHARMACY',
-                'name' => 'C. Polypharmacy',
-            ],
-            [
-                'code' => 'URINARY_INCONTINENCE',
-                'name' => 'D. Urinary Incontinence',
-            ],
-            [
-                'code' => 'FUNCTIONAL_CAPACITY',
-                'name' => 'E. Functional Capacity',
-            ],
-            [
-                'code' => 'FALL',
-                'name' => 'F. Fall (History and Screening Test)',
-            ],
-            [
-                'code' => 'MALNUTRITION',
-                'name' => 'G. Malnutrition',
-            ],
-            [
-                'code' => 'HEARING',
-                'name' => 'H. Hearing',
-            ],
-            [
-                'code' => 'VISION',
-                'name' => 'I. Vision',
-            ],
-        ];
-
-        foreach ($positiveIndicators as $index => $indicator) {
-            Indicator::updateOrCreate(
-                [
-                    'report_section_id' => $positive->id,
-                    'code' => $indicator['code'],
-                ],
-                [
-                    'name' => $indicator['name'],
-                    'display_order' => $index + 2,
-                    'is_active' => true,
-                ]
-            );
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | ICP / REFERRED
-        |--------------------------------------------------------------------------
-        */
-
-        $icp = ReportSection::updateOrCreate(
+        $icpReferred = ReportSection::updateOrCreate(
             [
                 'report_type_id' => $reportType->id,
                 'code' => 'ICP_REFERRED',
             ],
             [
-                'parent_id' => $geriatric->id,
+                'parent_id' => $geriatricScreening->id,
                 'name' => 'Provided with an Individualized Care Plan (ICP) AND/OR Referred to Appropriate Specialist / Service Provider',
-                'display_order' => 4,
+                'description' => null,
+                'display_order' => 3,
                 'is_active' => true,
             ]
         );
-
-        Indicator::updateOrCreate(
-            [
-                'report_section_id' => $icp->id,
-                'code' => 'SENIOR_CITIZENS_ICP_REFERRED',
-            ],
-            [
-                'name' => 'Total No. of Senior Citizens with ICP AND/OR Referred',
-                'display_order' => 1,
-                'is_active' => true,
-            ]
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | IMMUNIZATION
-        |--------------------------------------------------------------------------
-        */
 
         $immunization = ReportSection::updateOrCreate(
             [
@@ -224,106 +96,185 @@ class HWPSCSeeder extends Seeder
             [
                 'parent_id' => null,
                 'name' => 'Immunization',
+                'description' => null,
                 'display_order' => 2,
                 'is_active' => true,
             ]
         );
-
-        /*
-        |--------------------------------------------------------------------------
-        | Senior Citizens Seen
-        |--------------------------------------------------------------------------
-        */
-
-        Indicator::updateOrCreate(
-            [
-                'report_section_id' => $immunization->id,
-                'code' => 'SENIOR_CITIZENS_SEEN',
-            ],
-            [
-                'name' => 'Total No. of Senior Citizens Seen at the health facility (who availed of any health service)',
-                'display_order' => 1,
-                'is_active' => true,
-            ]
-        );
-
-        Indicator::updateOrCreate(
-            [
-                'report_section_id' => $immunization->id,
-                'code' => 'SENIOR_CITIZENS_NOT_PREVIOUSLY_PPV',
-            ],
-            [
-                'name' => 'Total No. of Senior Citizens Seen who had NOT previously received PPV upon reaching 60 years old',
-                'display_order' => 2,
-                'is_active' => true,
-            ]
-        );
-
-        /*
-        |--------------------------------------------------------------------------
-        | Senior Citizens Vaccinated
-        |--------------------------------------------------------------------------
-        */
 
         $vaccinated = ReportSection::updateOrCreate(
             [
                 'report_type_id' => $reportType->id,
-                'code' => 'SENIOR_CITIZENS_VACCINATED',
+                'code' => 'VACCINATED',
             ],
             [
                 'parent_id' => $immunization->id,
                 'name' => 'Senior Citizens Vaccinated',
-                'display_order' => 3,
-                'is_active' => true,
-            ]
-        );
-
-        Indicator::updateOrCreate(
-            [
-                'report_section_id' => $vaccinated->id,
-                'code' => 'SENIOR_CITIZENS_VACCINATED_TOTAL',
-            ],
-            [
-                'name' => 'Total No. of Senior Citizens Vaccinated',
-                'display_order' => 1,
-                'is_active' => true,
-            ]
-        );
-
-        Indicator::updateOrCreate(
-            [
-                'report_section_id' => $vaccinated->id,
-                'code' => 'ANTI_PNEUMOCOCCAL_VACCINE',
-            ],
-            [
-                'name' => 'Anti-Pneumococcal Vaccine',
+                'description' => null,
                 'display_order' => 2,
                 'is_active' => true,
             ]
         );
 
-        Indicator::updateOrCreate(
-            [
-                'report_section_id' => $vaccinated->id,
-                'code' => 'ANTI_INFLUENZA_VACCINE',
-            ],
-            [
-                'name' => 'Anti-Influenza Vaccine',
-                'display_order' => 3,
-                'is_active' => true,
-            ]
-        );
+        /*
+        |--------------------------------------------------------------------------
+        | Indicators
+        |--------------------------------------------------------------------------
+        */
 
-        Indicator::updateOrCreate(
+        $indicators = [
+
+            // Geriatric Screening
             [
-                'report_section_id' => $vaccinated->id,
-                'code' => 'OTHER_VACCINE',
+                'section' => $geriatricScreening,
+                'code' => 'GERIATRIC_SCREENING_TARGET',
+                'name' => 'Target for Geriatric Screening (based on the Total Eligible Population)',
+                'order' => 1,
             ],
+
             [
-                'name' => 'Others (Specify)',
-                'display_order' => 4,
-                'is_active' => true,
-            ]
-        );
+                'section' => $screened,
+                'code' => 'SENIOR_CITIZENS_SCREENED',
+                'name' => 'Total No. of Senior Citizens Screened',
+                'order' => 1,
+            ],
+
+            // Positive screening
+            [
+                'section' => $positiveScreening,
+                'code' => 'SENIOR_CITIZENS_POSITIVE_SCREENING',
+                'name' => 'Total No. of Senior Citizens with at least one Positive (+) Screening',
+                'order' => 1,
+            ],
+
+            [
+                'section' => $positiveScreening,
+                'code' => 'MEMORY',
+                'name' => 'A. Memory',
+                'order' => 2,
+            ],
+
+            [
+                'section' => $positiveScreening,
+                'code' => 'DEPRESSION',
+                'name' => 'B. Depression',
+                'order' => 3,
+            ],
+
+            [
+                'section' => $positiveScreening,
+                'code' => 'POLYPHARMACY',
+                'name' => 'C. Polypharmacy',
+                'order' => 4,
+            ],
+
+            [
+                'section' => $positiveScreening,
+                'code' => 'URINARY_INCONTINENCE',
+                'name' => 'D. Urinary Incontinence',
+                'order' => 5,
+            ],
+
+            [
+                'section' => $positiveScreening,
+                'code' => 'FUNCTIONAL_CAPACITY',
+                'name' => 'E. Functional Capacity',
+                'order' => 6,
+            ],
+
+            [
+                'section' => $positiveScreening,
+                'code' => 'FALL',
+                'name' => 'F. Fall (History and Screening Test)',
+                'order' => 7,
+            ],
+
+            [
+                'section' => $positiveScreening,
+                'code' => 'MALNUTRITION',
+                'name' => 'G. Malnutrition',
+                'order' => 8,
+            ],
+
+            [
+                'section' => $positiveScreening,
+                'code' => 'HEARING',
+                'name' => 'H. Hearing',
+                'order' => 9,
+            ],
+
+            [
+                'section' => $positiveScreening,
+                'code' => 'VISION',
+                'name' => 'I. Vision',
+                'order' => 10,
+            ],
+
+            // ICP / Referral
+            [
+                'section' => $icpReferred,
+                'code' => 'SENIOR_CITIZENS_ICP_REFERRED',
+                'name' => 'Total No. of Senior Citizens with ICP AND/OR Referred',
+                'order' => 1,
+            ],
+
+            // Immunization
+            [
+                'section' => $immunization,
+                'code' => 'SENIOR_CITIZENS_SEEN',
+                'name' => 'Total No. of Senior Citizens Seen at the health facility (who availed of any health service) *Seen does NOT equal Visits',
+                'order' => 1,
+            ],
+
+            [
+                'section' => $immunization,
+                'code' => 'SENIOR_CITIZENS_NOT_PREVIOUSLY_PPV',
+                'name' => 'Total No. of Senior Citizens Seen who had NOT previously received PPV upon reaching 60 years old',
+                'order' => 2,
+            ],
+
+            // Vaccination
+            [
+                'section' => $vaccinated,
+                'code' => 'SENIOR_CITIZENS_VACCINATED_TOTAL',
+                'name' => 'Total No. of Senior Citizens Vaccinated',
+                'order' => 1,
+            ],
+
+            [
+                'section' => $vaccinated,
+                'code' => 'ANTI_PNEUMOCOCCAL_VACCINE',
+                'name' => 'Anti-Pneumococcal Vaccine',
+                'order' => 2,
+            ],
+
+            [
+                'section' => $vaccinated,
+                'code' => 'ANTI_INFLUENZA_VACCINE',
+                'name' => 'Anti-Influenza Vaccine',
+                'order' => 3,
+            ],
+
+            [
+                'section' => $vaccinated,
+                'code' => 'OTHER_VACCINE',
+                'name' => 'Others',
+                'order' => 4,
+            ],
+        ];
+
+        foreach ($indicators as $indicator) {
+            Indicator::updateOrCreate(
+                [
+                    'report_section_id' => $indicator['section']->id,
+                    'code' => $indicator['code'],
+                ],
+                [
+                    'name' => $indicator['name'],
+                    'display_order' => $indicator['order'],
+                    'is_active' => true,
+                ]
+            );
+        }
     }
 }

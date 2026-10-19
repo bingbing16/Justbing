@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Indicator;
+use App\Models\ReportSubmission;
 
 class ReportValue extends Model
 {
@@ -21,13 +23,19 @@ class ReportValue extends Model
         'total' => 'decimal:2',
     ];
 
-    public function reportSubmission(): BelongsTo
+    public function submission(): BelongsTo
     {
-        return $this->belongsTo(ReportSubmission::class,'report_submission_id');
+        return $this->belongsTo(
+            ReportSubmission::class,
+            'report_submission_id'
+        );
     }
 
     public function indicator(): BelongsTo
     {
-        return $this->belongsTo(Indicator::class);
+        return $this->belongsTo(
+            Indicator::class,
+            'indicator_id'
+        );
     }
 }

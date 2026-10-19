@@ -3,64 +3,140 @@
 namespace App\Http\Controllers;
 
 use App\Models\ReportType;
+use Illuminate\Http\RedirectResponse;
 use App\Http\Requests\StoreReportTypeRequest;
 use App\Http\Requests\UpdateReportTypeRequest;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ReportTypeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): Response
     {
-        //
+        $reportTypes = ReportType::query()
+            ->withCount('sections')
+            ->orderBy('name')
+            ->get();
+
+        return Inertia::render('ReportTypes/index', [
+            'reportTypes' => $reportTypes,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): Response
     {
-        //
+        return Inertia::render('ReportTypes/create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreReportTypeRequest $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'code' => [
+                'required',
+                'string',
+                'max:100',
+                'unique:report_types,code',
+            ],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'slug' => [
+                'required', 
+                'string', 
+                'max:255'
+            ],
+            'description' => [
+                'nullable',
+                'string',
+            ],
+            'is_active' => [
+                'required',
+                'boolean',
+            ],
+        ]);
+
+        ReportType::create($validated);
+
+        return redirect()
+            ->route('report-types.index')
+            ->with(
+                'success',
+                'Report type created successfully.'
+            );
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ReportType $reportType)
+    public function edit(ReportType $reportType): Response
     {
-        //
+        return Inertia::render('ReportTypes/edit', [
+            'reportType' => $reportType,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ReportType $reportType)
+    public function update(Request $request, ReportType $reportType): RedirectResponse 
     {
-        //
+        $validated = $request->validate([
+            'code' => [
+                'required',
+                'string',
+                'max:100',
+                'unique:report_types,code,' . $reportType->id,
+            ],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+            'slug' => [
+                'required', 
+                'string', 
+                'max:255'
+            ],
+            'description' => [
+                'nullable',
+                'string',
+            ],
+            'is_active' => [
+                'required',
+                'boolean',
+            ],
+        ]);
+
+        $reportType->update($validated);
+
+        return redirect()
+            ->route('report-types.index')
+            ->with(
+                'success',
+                'Report type updated successfully.'
+            );
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateReportTypeRequest $request, ReportType $reportType)
+    public function updateStatus(Request $request, ReportType $reportType): RedirectResponse 
     {
-        //
-    }
+        $validated = $request->validate([
+            'is_active' => [
+                'required',
+                'boolean',
+            ],
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ReportType $reportType)
-    {
-        //
+        $reportType->update([
+            'is_active' => $validated['is_active'],
+        ]);
+
+        $status = $validated['is_active']
+            ? 'activated'
+            : 'deactivated';
+
+        return redirect()
+            ->route('report-types.index')
+            ->with(
+                'success',
+                "Report type {$status} successfully."
+            );
     }
+    
 }

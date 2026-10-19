@@ -36,4 +36,9 @@ class Indicator extends Model
             'indicator_id'
         );
     }
+
+    public function formula(): HasOne
+    {
+        return $this->hasOne(ReportIndicatorFormula::class);
+    }
 }

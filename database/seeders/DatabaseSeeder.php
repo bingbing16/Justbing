@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
             ReportingPeriodSeeder::class,
             LguSeeder::class,
             \Modules\Justine\Database\Seeders\JustineDatabaseSeeder::class,
+            ReportImportMappingSeeder::class,
+            DashboardConfigurationSeeder::class,
         ]);
     }
 }

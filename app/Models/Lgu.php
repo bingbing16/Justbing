@@ -15,6 +15,11 @@ class Lgu extends Model
         'is_active',
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+
     public function healthCenters(): HasMany
     {
         return $this->hasMany(HealthCenter::class);
@@ -23,4 +28,13 @@ class Lgu extends Model
     {
         return $this->hasMany(ReportSubmission::class);
     }
-}
+    public function reportEmails(): HasMany
+    {
+        return $this->hasMany(LguReportEmail::class);
+    }
+    public function activeReportEmails(): HasMany
+    {
+        return $this->hasMany(LguReportEmail::class)
+            ->where('is_active', true);
+    }
+    }

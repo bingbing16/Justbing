@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\ReportingPeriod;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\User;
 
 class ReportSubmission extends Model
 {
@@ -16,10 +18,18 @@ class ReportSubmission extends Model
         'submitted_by',
         'submitted_at',
         'remarks',
+
+        'validation_status',
+        'validated_at',
+        'validated_by',
+        'validation_remarks',
+        'validation_details',
     ];
 
     protected $casts = [
         'submitted_at' => 'datetime',
+        'validated_at' => 'datetime',
+        'validation_details' => 'array',
     ];
 
     public function lgu(): BelongsTo
@@ -34,21 +44,26 @@ class ReportSubmission extends Model
 
     public function reportingPeriod(): BelongsTo
     {
-        return $this->belongsTo(ReportingPeriod::class);
+        return $this->belongsTo(ReportingPeriod::class, 'reporting_period_id');
     }
 
     public function status(): BelongsTo
     {
-        return $this->belongsTo(SubmissionStatus::class,'status_id');
+        return $this->belongsTo(SubmissionStatus::class, 'status_id');
     }
 
-    public function submittedBy(): BelongsTo
+    public function submitter(): BelongsTo
     {
-        return $this->belongsTo(User::class,'submitted_by');
+        return $this->belongsTo(User::class, 'submitted_by');
     }
 
-    public function reportValues(): HasMany
+    public function values(): HasMany
     {
-        return $this->hasMany(ReportValue::class);
+        return $this->hasMany(ReportValue::class, 'report_submission_id');
+    }
+
+    public function validator()
+    {
+        return $this->belongsTo(User::class, 'validated_by');
     }
 }

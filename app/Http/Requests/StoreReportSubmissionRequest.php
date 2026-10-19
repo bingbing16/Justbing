@@ -7,23 +7,43 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreReportSubmissionRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, ValidationRule|array<mixed>|string>
-     */
     public function rules(): array
     {
         return [
-            //
+            'lgu_id' => [
+                'required',
+                'integer',
+                'exists:lgus,id',
+            ],
+
+            'report_type_id' => [
+                'required',
+                'integer',
+                'exists:report_types,id',
+            ],
+
+            'reporting_period_id' => [
+                'required',
+                'integer',
+                'exists:reporting_periods,id',
+            ],
+
+            'status_id' => [
+                'required',
+                'integer',
+                'exists:submission_statuses,id',
+            ],
+
+            'remarks' => [
+                'nullable',
+                'string',
+                'max:1000',
+            ],
         ];
     }
 }
